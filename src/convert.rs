@@ -6,12 +6,18 @@ use numpy::{Element, PyArray, ToPyArray};
 use opencv::core::*;
 use pyo3::Python;
 
-pub trait MatToPyArray<T> {
-    fn to_pyarray<'py>(&self, _: Python<'py>) -> Result<&'py PyArray<T, Ix2>>;
+pub trait MatToPyArray {
+    fn to_pyarray<'py, T: DataType + Element>(
+        &self,
+        _: Python<'py>,
+    ) -> Result<&'py PyArray<T, Ix2>>;
 }
 
-impl<T: DataType + Element> MatToPyArray<T> for Mat {
-    fn to_pyarray<'py>(&self, py: Python<'py>) -> Result<&'py PyArray<T, Ix2>> {
+impl MatToPyArray for Mat {
+    fn to_pyarray<'py, T: DataType + Element>(
+        &self,
+        py: Python<'py>,
+    ) -> Result<&'py PyArray<T, Ix2>> {
         let (rows, cols) = (self.rows(), self.cols());
         let mat_continuous = mat_to_continuous(self)?;
         let flatten_data_bytes = mat_continuous.as_ref().data_typed::<T>()?;

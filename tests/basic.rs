@@ -1,5 +1,4 @@
 use anyhow::Result;
-use numpy::PyArray;
 use opencv::core::{Rect, CV_8UC1};
 use opencv::imgproc::{rectangle, LINE_8};
 use opencv::prelude::*;
@@ -30,8 +29,7 @@ fn basic() {
             0,
         )?;
         plt.subplot(nr, nc, 3, None)?;
-        let im_np: &PyArray<u8, _> = im.to_pyarray(plt.py())?;
-        plt.imshow((im_np,), None)?;
+        plt.imshow((im.to_pyarray::<u8>(plt.py())?,), None)?;
 
         plt.show()?;
         Ok(())
