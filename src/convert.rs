@@ -1,18 +1,21 @@
 use std::borrow::Cow;
 
+use anyhow::Result;
 use numpy::{PyArray, ToPyArray};
 use opencv::core::*;
 use pyo3::Python;
 
 pub trait MatToPyArray {
-    fn to_pyarray<'py>(&self, _: Python<'py>) -> &'py PyArray<Self::Item, Self::Dim>;
+    fn to_pyarray<'py>(&self, _: Python<'py>) -> Result<&'py PyArray<Self::Item, Self::Dim>>;
 }
 
 impl MatToPyArray for Mat {
-    fn to_pyarray<'py>(&self, py: Python<'py>) -> &'py PyArray<Self::Item, Self::Dim> {
+    fn to_pyarray<'py>(&self, py: Python<'py>) -> Result<&'py PyArray<Self::Item, Self::Dim>> {
+        let (rows, cols) = (self.rows(), self.cols());
         let mat_continuous = mat_to_continuous(self);
-        let data_bytes = mat_continuous.as_ref().data_bytes()?;
-        data_bytes.to_pyarray(py)
+        let flatten_data_bytes = mat_continuous.as_ref().data_bytes()?;
+        let flatten_pyarray = flatten_data_bytes.to_pyarray(py);
+        Ok(flatten_pyarray.reshape((rows, cols))?)
     }
 }
 
