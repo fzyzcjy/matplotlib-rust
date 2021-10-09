@@ -1,4 +1,5 @@
 use anyhow::Result;
+use opencv::core::Rect;
 use pyo3::prelude::*;
 use pyo3::types::*;
 
@@ -53,12 +54,19 @@ macro_rules! fn_call_method {
     };
 }
 
-impl PyPlot<'_> {
+impl<'p> PyPlot<'p> {
     pub fn subplot(&self, nrows: i32, ncols: i32, index: i32, kwargs: KwArgs) -> Result<()> {
         eat_response(
             self.plt
                 .call_method("subplot", (nrows, ncols, index), kwargs),
         )
+    }
+
+    pub fn gca(&self) -> Result<Axes<'p>> {
+        Ok(Axes {
+            py: self.py,
+            ax: self.plt.call_method0("gca")?,
+        })
     }
 
     fn_call_method!(plot);
@@ -67,6 +75,21 @@ impl PyPlot<'_> {
     fn_call_method0!(tight_layout);
     fn_call_method0!(colorbar);
     fn_call_method0!(show);
+}
+
+pub struct Axes<'p> {
+    py: Python<'p>,
+    ax: &'p PyAny,
+}
+
+impl Axes<'_> {
+    pub fn add_patch_rectangle(&self, rect: Rect, kwargs: KwArgs) -> Result<()> {
+        eat_response(self.ax.call_method(
+            "add_patch",
+            ((rect.x, rect.y), rect.width, rect.height),
+            kwargs,
+        ))
+    }
 }
 
 fn eat_response<R>(raw: PyResult<R>) -> Result<()> {
