@@ -21,6 +21,10 @@ impl<'p> PyPlot<'p> {
             plt: py.import("matplotlib.pyplot")?,
         })
     }
+
+    pub fn py(&self) -> Python<'p> {
+        self.py
+    }
 }
 
 type KwArgs<'a> = Option<&'a PyDict>;
