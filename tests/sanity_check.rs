@@ -19,17 +19,55 @@ fn python_sanity_check() -> Result<()> {
 
 #[test]
 fn matplotlib_sanity_check() -> Result<()> {
-    Python::with_gil(|py| {
-        println!("call import");
-        let plt = py.import("matplotlib.pyplot")?;
-        println!("result {:?}", plt);
+    Python::with_gil(|py| -> Result<()> {
+        // println!("call import matplotlib");
+        // let matplotlib = py.import("matplotlib")?;
+        // println!("result {:?}", matplotlib);
+        //
+        // println!("call get_backend");
+        // println!("result {:?}", matplotlib.call_method0("get_backend")?);
+        //
+        // println!("call version");
+        // println!("result {:?}", matplotlib.getattr("__version__")?);
 
-        println!("call plot");
-        println!("result {:?}", plt.call_method1("plot", (10, 20))?);
+        println!(
+            "result {:?}",
+            py.run(
+                "\
+import matplotlib.pyplot as plt;
+print('after import');
+plt.plot([10,20], [100,110]);
+print('after plot');
+plt.show();
+print('after show');
+            ",
+                None,
+                None,
+            )?
+        );
 
-        println!("call show");
-        println!("result {:?}", plt.call_method0("show")?);
+        // println!(
+        //     "result {:?}",
+        //     py.run("import matplotlib.pyplot as plt", None, None)?
+        // );
+        // println!("result {:?}", py.run("plt.plot(10,20)", None, None)?);
+        // println!("result {:?}", py.run("plt.show()", None, None)?);
+
+        // println!("call import plt");
+        // let plt = py.import("matplotlib.pyplot")?;
+        // println!("result {:?}", plt);
+        //
+        // println!("call plot");
+        // println!(
+        //     "result {:?}",
+        //     plt.call_method1("plot", ([10, 100], [20, 200]))?
+        // );
+        //
+        // println!("call show");
+        // println!("result {:?}", plt.call_method0("show")?);
 
         Ok(())
     })
+    .unwrap();
+    Ok(())
 }
