@@ -19,6 +19,8 @@ fn python_sanity_check() -> Result<()> {
     })
 }
 
+// ignore the test, only for sanity
+#[ignore]
 #[test]
 fn matplotlib_sanity_check() -> Result<()> {
     Python::with_gil(|py| -> Result<()> {
