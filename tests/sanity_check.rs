@@ -35,6 +35,7 @@ fn matplotlib_sanity_check() -> Result<()> {
             py.run(
                 "\
 import matplotlib.pyplot as plt;
+plt.ion();
 print('after import');
 plt.plot([10,20], [100,110]);
 print('after plot');
