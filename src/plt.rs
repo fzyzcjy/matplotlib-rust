@@ -29,6 +29,22 @@ impl<'p> PyPlot<'p> {
 
 type KwArgs<'a> = Option<&'a PyDict>;
 
+macro_rules! fn_call_method {
+    ($func_name:ident) => {
+        pub fn $func_name(&self, args: impl IntoPy<Py<PyTuple>>, kwargs: KwArgs) -> Result<()> {
+            eat_response(self.plt.call_method(stringify!($func_name), args, kwargs))
+        }
+    };
+}
+
+macro_rules! fn_call_method0 {
+    ($func_name:ident) => {
+        pub fn $func_name(&self) -> Result<()> {
+            eat_response(self.plt.call_method0(stringify!($func_name)))
+        }
+    };
+}
+
 impl PyPlot<'_> {
     pub fn subplot(&self, nrows: i32, ncols: i32, index: i32, kwargs: KwArgs) -> Result<()> {
         eat_response(
@@ -37,21 +53,11 @@ impl PyPlot<'_> {
         )
     }
 
-    pub fn plot(&self, args: impl IntoPy<Py<PyTuple>>, kwargs: KwArgs) -> Result<()> {
-        eat_response(self.plt.call_method("plot", args, kwargs))
-    }
+    fn_call_method!(plot);
+    fn_call_method!(imshow);
+    fn_call_method!(tight_layout);
 
-    pub fn imshow(&self, args: impl IntoPy<Py<PyTuple>>, kwargs: KwArgs) -> Result<()> {
-        eat_response(self.plt.call_method("imshow", args, kwargs))
-    }
-
-    pub fn tight_layout(&self, args: impl IntoPy<Py<PyTuple>>, kwargs: KwArgs) -> Result<()> {
-        eat_response(self.plt.call_method("tight_layout", args, kwargs))
-    }
-
-    pub fn show(&self) -> Result<()> {
-        eat_response(self.plt.call_method0("show"))
-    }
+    fn_call_method0!(show);
 }
 
 fn eat_response<R>(raw: PyResult<R>) -> Result<()> {
