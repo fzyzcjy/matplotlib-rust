@@ -9,5 +9,3 @@ name = "matplotlib"
 [dependencies]
 pyo3 = { version = "0.14.5", features = ["auto-initialize"] }
 anyhow = "1.0.44"
-widestring = "0.4.3"
-libc = "0.2.103"

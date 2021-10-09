@@ -1,9 +1,6 @@
 use anyhow::Result;
-use libc::wchar_t;
-use pyo3::ffi;
 use pyo3::prelude::*;
 use pyo3::types::IntoPyDict;
-use widestring::WideCString;
 
 #[test]
 fn python_sanity_check() -> Result<()> {
@@ -16,6 +13,23 @@ fn python_sanity_check() -> Result<()> {
         let user: String = py.eval(code, None, Some(&locals))?.extract()?;
 
         println!("Hello {}, I'm Python {}", user, version);
+        Ok(())
+    })
+}
+
+#[test]
+fn matplotlib_sanity_check() -> Result<()> {
+    Python::with_gil(|py| {
+        println!("call import");
+        let plt = py.import("matplotlib.pyplot")?;
+        println!("result {:?}", plt);
+
+        println!("call plot");
+        println!("result {:?}", plt.call_method1("plot", (10, 20))?);
+
+        println!("call show");
+        println!("result {:?}", plt.call_method0("show")?);
+
         Ok(())
     })
 }
