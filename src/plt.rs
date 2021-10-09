@@ -23,7 +23,6 @@ impl<'p> PyPlot<'p> {
     }
 }
 
-type Args = impl IntoPy<Py<PyTuple>>;
 type KwArgs<'a> = Option<&'a PyDict>;
 
 impl PyPlot<'_> {
@@ -34,15 +33,15 @@ impl PyPlot<'_> {
         )
     }
 
-    pub fn plot(&self, args: Args, kwargs: KwArgs) -> Result<()> {
+    pub fn plot(&self, args: impl IntoPy<Py<PyTuple>>, kwargs: KwArgs) -> Result<()> {
         eat_response(self.plt.call_method("plot", args, kwargs))
     }
 
-    pub fn imshow(&self, args: Args, kwargs: KwArgs) -> Result<()> {
+    pub fn imshow(&self, args: impl IntoPy<Py<PyTuple>>, kwargs: KwArgs) -> Result<()> {
         eat_response(self.plt.call_method("imshow", args, kwargs))
     }
 
-    pub fn tight_layout(&self, args: Args, kwargs: KwArgs) -> Result<()> {
+    pub fn tight_layout(&self, args: impl IntoPy<Py<PyTuple>>, kwargs: KwArgs) -> Result<()> {
         eat_response(self.plt.call_method("tight_layout", args, kwargs))
     }
 
