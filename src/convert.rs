@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use anyhow::Result;
 use ndarray::*;
 use numpy::{Element, PyArray, ToPyArray};
-use opencv::core::*;
+use opencv::prelude::*;
 use pyo3::Python;
 
 pub trait MatToPyArray {

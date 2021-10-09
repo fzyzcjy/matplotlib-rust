@@ -1,7 +1,8 @@
 use anyhow::Result;
-use opencv::core::Rect;
 use pyo3::prelude::*;
 use pyo3::types::*;
+
+use opencv::core::Rect;
 
 pub struct PyPlot<'p> {
     py: Python<'p>,
@@ -84,11 +85,13 @@ pub struct Axes<'p> {
 
 impl Axes<'_> {
     pub fn add_patch_rectangle(&self, rect: Rect, kwargs: KwArgs) -> Result<()> {
-        eat_response(self.ax.call_method(
-            "add_patch",
+        let patches = self.py.import("matplotlib.patches")?;
+        let rect = patches.call_method(
+            "Rectangle",
             ((rect.x, rect.y), rect.width, rect.height),
             kwargs,
-        ))
+        )?;
+        eat_response(self.ax.call_method1("add_patch", (rect,)))
     }
 }
 
