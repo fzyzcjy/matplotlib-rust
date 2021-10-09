@@ -29,18 +29,26 @@ impl<'p> PyPlot<'p> {
 
 type KwArgs<'a> = Option<&'a PyDict>;
 
-macro_rules! fn_call_method {
-    ($func_name:ident) => {
-        pub fn $func_name(&self, args: impl IntoPy<Py<PyTuple>>, kwargs: KwArgs) -> Result<()> {
-            eat_response(self.plt.call_method(stringify!($func_name), args, kwargs))
-        }
-    };
-}
-
 macro_rules! fn_call_method0 {
     ($func_name:ident) => {
         pub fn $func_name(&self) -> Result<()> {
             eat_response(self.plt.call_method0(stringify!($func_name)))
+        }
+    };
+}
+
+macro_rules! fn_call_method1 {
+    ($func_name:ident) => {
+        pub fn $func_name(&self, args: impl IntoPy<Py<PyTuple>>) -> Result<()> {
+            eat_response(self.plt.call_method1(stringify!($func_name), args))
+        }
+    };
+}
+
+macro_rules! fn_call_method {
+    ($func_name:ident) => {
+        pub fn $func_name(&self, args: impl IntoPy<Py<PyTuple>>, kwargs: KwArgs) -> Result<()> {
+            eat_response(self.plt.call_method(stringify!($func_name), args, kwargs))
         }
     };
 }
@@ -55,8 +63,9 @@ impl PyPlot<'_> {
 
     fn_call_method!(plot);
     fn_call_method!(imshow);
-    fn_call_method!(tight_layout);
 
+    fn_call_method0!(tight_layout);
+    fn_call_method0!(colorbar);
     fn_call_method0!(show);
 }
 

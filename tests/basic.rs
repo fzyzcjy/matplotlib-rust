@@ -30,7 +30,9 @@ fn basic() {
         )?;
         plt.subplot(nr, nc, 3, None)?;
         plt.imshow((im.to_pyarray::<u8>(plt.py())?,), None)?;
+        plt.colorbar();
 
+        plt.tight_layout();
         plt.show()?;
         Ok(())
     })
