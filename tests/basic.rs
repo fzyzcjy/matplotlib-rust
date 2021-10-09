@@ -9,7 +9,7 @@ use matplotlib::*;
 #[test]
 fn basic() {
     PyPlot::with_gil(|plt| -> Result<()> {
-        let (nr, nc) = (2, 3);
+        let (nr, nc) = (2, 2);
 
         // plot + array
         plt.subplot(nr, nc, 1, None)?;

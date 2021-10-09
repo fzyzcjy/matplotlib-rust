@@ -11,3 +11,6 @@ pyo3 = { version = "0.14.5", features = ["auto-initialize"] }
 anyhow = "1.0.44"
 numpy = "0.14.1"
 opencv = { version = "0.55", optional = true }
+
+[features]
+default = ["opencv"]
