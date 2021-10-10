@@ -39,13 +39,13 @@ macro_rules! fn_call_method0 {
     };
 }
 
-macro_rules! fn_call_method1 {
-    ($func_name:ident) => {
-        pub fn $func_name(&self, args: impl IntoPy<Py<PyTuple>>) -> Result<()> {
-            eat_response(self.plt.call_method1(stringify!($func_name), args))
-        }
-    };
-}
+// macro_rules! fn_call_method1 {
+//     ($func_name:ident) => {
+//         pub fn $func_name(&self, args: impl IntoPy<Py<PyTuple>>) -> Result<()> {
+//             eat_response(self.plt.call_method1(stringify!($func_name), args))
+//         }
+//     };
+// }
 
 macro_rules! fn_call_method {
     ($func_name:ident) => {
